@@ -1,23 +1,47 @@
 import logo from './logo.svg';
 import './App.css';
+import {useState} from 'react';
+import Game from './components/Game';
+import Welcome from './components/Welcome';
+import Result from './components/Result'
 
 function App() {
+  const WELCOME ='welcome',GAME='game',RESULT ='result';
+  const [score, setScore] = useState();
+  const [currentScreen, setCurrentScreen]= useState(WELCOME);
+  
+
+  const restartQuiz = ()=>{
+    setCurrentScreen(GAME);
+    setScore(0);
+  }
+
+let content = null;
+switch(currentScreen){
+  case WELCOME:
+      content = <Welcome
+      nextScreen ={()=>setCurrentScreen(GAME)}/>
+      break;
+  case GAME:
+      content = <Game 
+      answeredCorrectly= {() => setScore(score + 1)}
+      showResult ={() => setCurrentScreen(RESULT)}
+      />
+      break;
+  default:
+      content = <Result score ={score}  restartQuiz ={restartQuiz} />;
+}
+  //<Game answeredCorrectly= {() => setScore(score + 1)}/>
+//<Welcome/>
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Quiz</h1>
       </header>
+      <main>
+        {content}
+        Score:{score}
+      </main>
     </div>
   );
 }
